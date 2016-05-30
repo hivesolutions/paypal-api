@@ -41,7 +41,7 @@ import appier
 
 from . import payment
 
-BASE_URL = "https://api.paypal.com/"
+BASE_URL = "https://api.paypal.com/v1/"
 """ The default base url to be used when no other
 base url value is provided to the constructor """
 

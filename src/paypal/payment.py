@@ -46,7 +46,7 @@ class PaymentApi(object):
         transactions = [],
         redirect_urls = []
     ):
-        url = self.base_url + "charges"
+        url = self.base_url + "payments/payment"
         payload = dict(
             intent = intent,
             payer = payer,
