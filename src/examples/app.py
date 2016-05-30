@@ -87,7 +87,7 @@ class PaypalApp(appier.WebApp):
             )
         )
         approval_url = self.get_url(payment["links"], "approval_url")
-        if redirect: self.redirect(approval_url)
+        if approval_url and redirect: self.redirect(approval_url)
         return payment
 
     @appier.route("/payments/return", "GET")
