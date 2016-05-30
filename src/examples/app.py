@@ -19,6 +19,9 @@
 # You should have received a copy of the Apache License along with
 # Hive PayPal API. If not, see <http://www.apache.org/licenses/>.
 
+__author__ = "João Magalhães <joamag@hive.pt>"
+""" The author(s) of the module """
+
 __version__ = "1.0.0"
 """ The version of the module """
 
@@ -34,10 +37,45 @@ __copyright__ = "Copyright (c) 2008-2016 Hive Solutions Lda."
 __license__ = "Apache License, Version 2.0"
 """ The license for the module """
 
-from . import base
-from . import payment
-from . import webhook
+import appier
 
-from .base import BASE_URL, Api
-from .payment import PaymentApi
-from .webhook import WebhookApi
+from . import base
+
+class PaypalApp(appier.WebApp):
+
+    def __init__(self, *args, **kwargs):
+        appier.WebApp.__init__(
+            self,
+            name = "paypal",
+            *args, **kwargs
+        )
+
+    @appier.route("/", "GET")
+    def index(self):
+        return self.webhooks()
+
+    @appier.route("/webhooks", "GET")
+    def webhooks(self):
+        api = self.get_api()
+        webhooks = api.list_webhooks()
+        return webhooks
+
+    @appier.route("/payments/new", "GET")
+    def new_payment(self):
+        amount = self.field("amount", 100, cast = int)
+        currency = self.field("currency", "EUR")
+        exp_month = self.field("exp_month", 1)
+        exp_year = self.field("exp_year", 2020)
+        number = self.field("number", 4242424242424242)
+        api = self.get_api()
+        balance = api.create_payment(
+            amount, currency, exp_month, exp_year, number
+        )
+        return balance
+
+    def get_api(self):
+        return base.get_api()
+
+if __name__ == "__main__":
+    app = PaypalApp()
+    app.serve()

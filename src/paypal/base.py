@@ -40,14 +40,16 @@ __license__ = "Apache License, Version 2.0"
 import appier
 
 from . import payment
+from . import webhook
 
 BASE_URL = "https://api.paypal.com/v1/"
 """ The default base url to be used when no other
 base url value is provided to the constructor """
 
 class Api(
-    appier.Api,
-    payment.PaymentApi
+    appier.OAuth2Api,
+    payment.PaymentApi,
+    webhook.WebhookApi
 ):
 
     def __init__(self, *args, **kwargs):

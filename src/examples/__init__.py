@@ -34,10 +34,8 @@ __copyright__ = "Copyright (c) 2008-2016 Hive Solutions Lda."
 __license__ = "Apache License, Version 2.0"
 """ The license for the module """
 
+from . import app
 from . import base
-from . import payment
-from . import webhook
 
-from .base import BASE_URL, Api
-from .payment import PaymentApi
-from .webhook import WebhookApi
+from .app import PaypalApp
+from .base import get_api

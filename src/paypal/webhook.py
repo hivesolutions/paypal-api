@@ -19,6 +19,9 @@
 # You should have received a copy of the Apache License along with
 # Hive PayPal API. If not, see <http://www.apache.org/licenses/>.
 
+__author__ = "João Magalhães <joamag@hive.pt>"
+""" The author(s) of the module """
+
 __version__ = "1.0.0"
 """ The version of the module """
 
@@ -34,10 +37,9 @@ __copyright__ = "Copyright (c) 2008-2016 Hive Solutions Lda."
 __license__ = "Apache License, Version 2.0"
 """ The license for the module """
 
-from . import base
-from . import payment
-from . import webhook
+class WebhookApi(object):
 
-from .base import BASE_URL, Api
-from .payment import PaymentApi
-from .webhook import WebhookApi
+    def list_webhooks(self):
+        url = self.base_url + "notifications/webhooks"
+        contents = self.get(url)
+        return contents
