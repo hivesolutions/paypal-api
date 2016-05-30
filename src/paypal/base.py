@@ -37,6 +37,8 @@ __copyright__ = "Copyright (c) 2008-2016 Hive Solutions Lda."
 __license__ = "Apache License, Version 2.0"
 """ The license for the module """
 
+import base64
+
 import appier
 
 from . import payment
@@ -76,12 +78,20 @@ class Api(
 
     def oauth_token(self, grant_type = "client_credentials"):
         url = self.base_url + "oauth2/token"
-        params = dict(grant_type = grant_type)
+        token = "%s:%s" % (self.client_id, self.client_secret)
+        token = appier.legacy.bytes(token)
+        token_b64 = base64.b64encode(token)
+        token_b64 = appier.legacy.str(token_b64)
+        authorization = "Basic " + token_b64
+        params = dict(
+            grant_type = grant_type
+        )
         headers = {
             "Accept" : "application/json",
-            "Authorization" : "%s:%s" % (self.client_id, self.client_secret)
+            "Accept-Language" : "en_US",
+            "Authorization" : authorization
         }
-        contents = self.get(
+        contents = self.post(
             url,
             params = params,
             headers = headers,

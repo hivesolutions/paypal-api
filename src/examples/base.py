@@ -43,5 +43,6 @@ import paypal
 
 def get_api():
     return paypal.Api(
-        api_key = appier.conf("PAYPAL_API_KEY")
+        client_id = appier.conf("PAYPAL_ID"),
+        client_secret = appier.conf("PAYPAL_SECRET")
     )
