@@ -46,6 +46,10 @@ BASE_URL = "https://api.paypal.com/v1/"
 """ The default base url to be used when no other
 base url value is provided to the constructor """
 
+SANDBOX_URL = "https://api.sandbox.paypal.com/v1/"
+""" The base url that should be used whenever using
+the api under a sandbox environment """
+
 CLIENT_ID = None
 """ The default value to be used for the client id
 in case no client id is provided to the api client """
