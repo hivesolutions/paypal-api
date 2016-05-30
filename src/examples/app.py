@@ -110,8 +110,10 @@ class PaypalApp(appier.WebApp):
 
     def get_url(self, links, target):
         for link in links:
-            if not link["rel"] == target: continue
-            return link["href"]
+            rel = link.get("rel", None)
+            href = link.get("href", None)
+            if not rel == target: continue
+            return href
         return None
 
     def ensure_api(self):
