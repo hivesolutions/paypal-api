@@ -80,6 +80,7 @@ class PaypalApp(appier.WebApp):
         if access_token: return
         api = base.get_api()
         api.oauth_token()
+        self.session["paypal.access_token"] = api.access_token
 
     def get_api(self):
         access_token = self.session and self.session.get("paypal.access_token", None)
