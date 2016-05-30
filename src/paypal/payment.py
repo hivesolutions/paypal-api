@@ -19,6 +19,9 @@
 # You should have received a copy of the Apache License along with
 # Hive PayPal API. If not, see <http://www.apache.org/licenses/>.
 
+__author__ = "João Magalhães <joamag@hive.pt>"
+""" The author(s) of the module """
+
 __version__ = "1.0.0"
 """ The version of the module """
 
@@ -34,8 +37,21 @@ __copyright__ = "Copyright (c) 2008-2016 Hive Solutions Lda."
 __license__ = "Apache License, Version 2.0"
 """ The license for the module """
 
-from . import base
-from . import payment
+class PaymentApi(object):
 
-from .base import BASE_URL, Api
-from .payment import PaymentApi
+    def create_payment(
+        self,
+        intent = "sale",
+        payer = None,
+        transactions = [],
+        redirect_urls = []
+    ):
+        url = self.base_url + "charges"
+        payload = dict(
+            intent = intent,
+            payer = payer,
+            transactions = transactions,
+            redirect_urls = redirect_urls
+        )
+        contents = self.post(url, data_j = payload)
+        return contents
