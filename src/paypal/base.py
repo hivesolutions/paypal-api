@@ -74,6 +74,10 @@ class Api(
         self.client_secret = kwargs.get("client_secret", self.client_secret)
         self.access_token = kwargs.get("access_token", None)
 
+    def auth_callback(self, params, headers):
+        self.oauth_token()
+        headers["Authorization"] = "Bearer %s" % self.get_access_token()
+
     def oauth_token(self, grant_type = "client_credentials"):
         url = self.base_url + "oauth2/token"
         token = appier.http._authorization(self.client_id, self.client_secret)
