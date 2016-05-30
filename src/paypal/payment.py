@@ -60,3 +60,8 @@ class PaymentApi(object):
         url = self.base_url + "payments/payment/%s" % payment
         contents = self.get(url)
         return contents
+
+    def execute_payment(self, payment, payer_id):
+        url = self.base_url + "payments/payment/%s/execute" % payment
+        contents = self.post(url, data_j = dict(payer_id = payer_id))
+        return contents
