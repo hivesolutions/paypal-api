@@ -56,25 +56,36 @@ class PaypalApp(appier.WebApp):
 
     @appier.route("/webhooks", "GET")
     def webhooks(self):
+        self.ensure_api()
         api = self.get_api()
         webhooks = api.list_webhooks()
         return webhooks
 
     @appier.route("/payments/new", "GET")
     def new_payment(self):
+        self.ensure_api()
+        api = self.get_api()
         amount = self.field("amount", 100, cast = int)
         currency = self.field("currency", "EUR")
         exp_month = self.field("exp_month", 1)
         exp_year = self.field("exp_year", 2020)
         number = self.field("number", 4242424242424242)
-        api = self.get_api()
         balance = api.create_payment(
             amount, currency, exp_month, exp_year, number
         )
         return balance
 
+    def ensure_api(self):
+        access_token = self.session.get("paypal.access_token", None)
+        if access_token: return
+        api = base.get_api()
+        api.oauth_token()
+
     def get_api(self):
-        return base.get_api()
+        access_token = self.session and self.session.get("paypal.access_token", None)
+        api = base.get_api()
+        api.access_token = access_token
+        return api
 
 if __name__ == "__main__":
     app = PaypalApp()

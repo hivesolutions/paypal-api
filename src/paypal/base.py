@@ -46,6 +46,14 @@ BASE_URL = "https://api.paypal.com/v1/"
 """ The default base url to be used when no other
 base url value is provided to the constructor """
 
+CLIENT_ID = None
+""" The default value to be used for the client id
+in case no client id is provided to the api client """
+
+CLIENT_SECRET = None
+""" The secret value to be used for situations where
+no client secret has been provided to the client """
+
 class Api(
     appier.OAuth2Api,
     payment.PaymentApi,
@@ -54,4 +62,20 @@ class Api(
 
     def __init__(self, *args, **kwargs):
         appier.Api.__init__(self, *args, **kwargs)
+        self.client_id = appier.conf("PAYPAL_ID", CLIENT_ID)
+        self.client_secret = appier.conf("PAYPAL_SECRET", CLIENT_SECRET)
         self.base_url = kwargs.get("base_url", BASE_URL)
+        self.client_id = kwargs.get("client_id", self.client_id)
+        self.client_secret = kwargs.get("client_secret", self.client_secret)
+        self.access_token = kwargs.get("access_token", None)
+
+    def oauth_token(self, grant_type = "client_credentials"):
+        url = self.base_url + "oauth2/token"
+        params = dict(grant_type = grant_type)
+        headers = {
+            "Accept" : "application/json",
+            "Authorization" : "%s:%s" % (self.client_id, self.client_secret)
+        }
+        contents = self.get(url, params = params, headers = headers)
+        self.access_token = contents["access_token"]
+        return self.access_token
