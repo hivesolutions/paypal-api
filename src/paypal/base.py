@@ -102,3 +102,11 @@ class Api(
         )
         self.access_token = contents["access_token"]
         return self.access_token
+
+    def get_url(self, links, target):
+        for link in links:
+            rel = link.get("rel", None)
+            href = link.get("href", None)
+            if not rel == target: continue
+            return href
+        return None
