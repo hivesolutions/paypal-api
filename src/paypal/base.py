@@ -74,6 +74,10 @@ class Api(
         self.client_secret = kwargs.get("client_secret", self.client_secret)
         self.access_token = kwargs.get("access_token", None)
 
+    def get_access_token(self):
+        if self.access_token: return self.access_token
+        return self.oauth_token()
+
     def auth_callback(self, params, headers):
         self.oauth_token()
         headers["Authorization"] = "Bearer %s" % self.get_access_token()
