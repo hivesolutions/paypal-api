@@ -84,6 +84,12 @@ class Api(
 
     def oauth_token(self, grant_type = "client_credentials"):
         url = self.base_url + "oauth2/token"
+        if not self.client_id: raise appier.OAuthAccessError(
+            message = "No client id provided"
+        )
+        if not self.client_secret: raise appier.OAuthAccessError(
+            message = "No client secret provided"
+        )
         token = appier.http._authorization(self.client_id, self.client_secret)
         authorization = "Basic %s" % token
         params = dict(
@@ -98,6 +104,7 @@ class Api(
             url,
             params = params,
             headers = headers,
+            auth = False,
             token = False
         )
         self.access_token = contents["access_token"]
