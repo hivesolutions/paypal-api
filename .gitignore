@@ -4,4 +4,4 @@
 session.shelve*
 
 /dist
-/src/facebook_api.egg-info
+/src/paypal_api.egg-info
