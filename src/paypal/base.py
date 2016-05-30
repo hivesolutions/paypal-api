@@ -39,11 +39,16 @@ __license__ = "Apache License, Version 2.0"
 
 import appier
 
+from . import payment
+
 BASE_URL = "https://api.paypal.com/"
 """ The default base url to be used when no other
 base url value is provided to the constructor """
 
-class Api(appier.Api):
+class Api(
+    appier.Api,
+    payment.PaymentApi
+):
 
     def __init__(self, *args, **kwargs):
         appier.Api.__init__(self, *args, **kwargs)
