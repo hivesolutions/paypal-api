@@ -89,16 +89,20 @@ class PaypalApp(appier.WebApp):
 
     @appier.route("/payments/return", "GET")
     def return_payment(self):
+        token = self.field("token")
         return dict(
             message = "Returned from payment",
-            operation = "return"
+            operation = "return",
+            token = token
         )
 
     @appier.route("/payments/cancel", "GET")
     def cancel_payment(self):
+        token = self.field("token")
         return dict(
             message = "Canceled payment",
-            operation = "cancel"
+            operation = "cancel",
+            token = token
         )
 
     def ensure_api(self):
