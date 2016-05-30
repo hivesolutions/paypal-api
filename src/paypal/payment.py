@@ -55,3 +55,8 @@ class PaymentApi(object):
         )
         contents = self.post(url, data_j = payload)
         return contents
+
+    def get_payment(self, payment):
+        url = self.base_url + "payments/payment/%s" % payment
+        contents = self.get(url)
+        return contents

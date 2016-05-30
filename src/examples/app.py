@@ -90,13 +90,21 @@ class PaypalApp(appier.WebApp):
         if approval_url and redirect: self.redirect(approval_url)
         return payment
 
+    @appier.route("/payments/<str:id>", "GET")
+    def get_payment(self, id):
+        api = self.get_api()
+        payment = api.get_payment(id)
+        return payment
+
     @appier.route("/payments/return", "GET")
     def return_payment(self):
         token = self.field("token")
+        payment_id = self.field("paymentId")
         return dict(
             message = "Returned from payment",
             operation = "return",
-            token = token
+            token = token,
+            payment_id = payment_id
         )
 
     @appier.route("/payments/cancel", "GET")
