@@ -67,13 +67,39 @@ class PaypalApp(appier.WebApp):
         api = self.get_api()
         amount = self.field("amount", 100, cast = int)
         currency = self.field("currency", "EUR")
-        exp_month = self.field("exp_month", 1)
-        exp_year = self.field("exp_year", 2020)
-        number = self.field("number", 4242424242424242)
-        balance = api.create_payment(
-            amount, currency, exp_month, exp_year, number
+        description = self.field("description", "payment")
+        payment_method = self.field("payment_method", "paypal")
+        payer = dict(payment_method = payment_method)
+        transaction = dict(
+            amount = dict(
+                total = "%.2f" % amount,
+                currency = currency
+            ),
+            description = description
         )
-        return balance
+        payment = api.create_payment(
+            payer = payer,
+            transactions = [transaction],
+            redirect_urls = dict(
+                return_url = self.url_for("paypal.return_payment", absolute = True),
+                cancel_url = self.url_for("paypal.cancel_payment", absolute = True)
+            )
+        )
+        return payment
+
+    @appier.route("/payments/return", "GET")
+    def return_payment(self):
+        return dict(
+            message = "Returned from payment",
+            operation = "return"
+        )
+
+    @appier.route("/payments/cancel", "GET")
+    def cancel_payment(self):
+        return dict(
+            message = "Canceled payment",
+            operation = "cancel"
+        )
 
     def ensure_api(self):
         access_token = self.session.get("paypal.access_token", None)
