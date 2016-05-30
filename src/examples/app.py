@@ -100,11 +100,13 @@ class PaypalApp(appier.WebApp):
     def return_payment(self):
         token = self.field("token")
         payment_id = self.field("paymentId")
+        payer_id = self.field("PayerID")
         return dict(
             message = "Returned from payment",
             operation = "return",
             token = token,
-            payment_id = payment_id
+            payment_id = payment_id,
+            payer_id = payer_id
         )
 
     @appier.route("/payments/cancel", "GET")
