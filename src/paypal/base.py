@@ -61,7 +61,7 @@ class Api(
 ):
 
     def __init__(self, *args, **kwargs):
-        appier.Api.__init__(self, *args, **kwargs)
+        appier.OAuth2Api.__init__(self, *args, **kwargs)
         self.client_id = appier.conf("PAYPAL_ID", CLIENT_ID)
         self.client_secret = appier.conf("PAYPAL_SECRET", CLIENT_SECRET)
         self.base_url = kwargs.get("base_url", BASE_URL)
@@ -76,6 +76,11 @@ class Api(
             "Accept" : "application/json",
             "Authorization" : "%s:%s" % (self.client_id, self.client_secret)
         }
-        contents = self.get(url, params = params, headers = headers)
+        contents = self.get(
+            url,
+            params = params,
+            headers = headers,
+            token = False
+        )
         self.access_token = contents["access_token"]
         return self.access_token

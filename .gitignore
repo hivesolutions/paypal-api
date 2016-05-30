@@ -1,0 +1,7 @@
+*.pyc
+*.debug
+
+session.shelve*
+
+/dist
+/src/facebook_api.egg-info
