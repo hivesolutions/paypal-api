@@ -69,6 +69,7 @@ class PaypalApp(appier.WebApp):
         currency = self.field("currency", "EUR")
         description = self.field("description", "payment")
         payment_method = self.field("payment_method", "paypal")
+        redirect = self.field("redirect", True, cast = bool)
         payer = dict(payment_method = payment_method)
         transaction = dict(
             amount = dict(
@@ -85,6 +86,8 @@ class PaypalApp(appier.WebApp):
                 cancel_url = self.url_for("paypal.cancel_payment", absolute = True)
             )
         )
+        approval_url = self.get_url(payment["links"], "approval_url")
+        if redirect: self.redirect(approval_url)
         return payment
 
     @appier.route("/payments/return", "GET")
@@ -104,6 +107,12 @@ class PaypalApp(appier.WebApp):
             operation = "cancel",
             token = token
         )
+
+    def get_url(self, links, target):
+        for link in links:
+            if not link["rel"] == target: continue
+            return link["href"]
+        return None
 
     def ensure_api(self):
         access_token = self.session.get("paypal.access_token", None)
