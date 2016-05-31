@@ -66,7 +66,7 @@ class Api(
 
     def __init__(self, *args, **kwargs):
         appier.OAuth2Api.__init__(self, *args, **kwargs)
-        self.sandbox = appier.conf("PAYPAL_SANDBOX", True)
+        self.sandbox = appier.conf("PAYPAL_SANDBOX", True, cast = bool)
         self.client_id = appier.conf("PAYPAL_ID", CLIENT_ID)
         self.client_secret = appier.conf("PAYPAL_SECRET", CLIENT_SECRET)
         self.base_url = kwargs.get("base_url", SANDBOX_URL if self.sandbox else BASE_URL)
