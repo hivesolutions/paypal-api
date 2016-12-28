@@ -134,3 +134,5 @@ class PaypalApp(appier.WebApp):
 if __name__ == "__main__":
     app = PaypalApp()
     app.serve()
+else:
+    __path__ = []
