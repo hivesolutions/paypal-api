@@ -1,4 +1,4 @@
-# [PayPal API](http://paypal_api.hive.pt)
+# [PayPal API](http://paypal-api.hive.pt)
 
 Python based PayPal client.
 
