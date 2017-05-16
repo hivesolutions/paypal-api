@@ -48,7 +48,7 @@ setuptools.setup(
     description = "PayPal API Client",
     license = "Apache License, Version 2.0",
     keywords = "PayPal api",
-    url = "http://paypal_api.hive.pt",
+    url = "http://paypal-api.hive.pt",
     zip_safe = False,
     packages = [
         "paypal"
