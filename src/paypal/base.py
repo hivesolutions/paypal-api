@@ -58,14 +58,14 @@ CLIENT_SECRET = None
 """ The secret value to be used for situations where
 no client secret has been provided to the client """
 
-class Api(
-    appier.OAuth2Api,
-    payment.PaymentApi,
-    webhook.WebhookApi
+class API(
+    appier.OAuth2API,
+    payment.PaymentAPI,
+    webhook.WebhookAPI
 ):
 
     def __init__(self, *args, **kwargs):
-        appier.OAuth2Api.__init__(self, *args, **kwargs)
+        appier.OAuth2API.__init__(self, *args, **kwargs)
         self.sandbox = appier.conf("PAYPAL_SANDBOX", True, cast = bool)
         self.client_id = appier.conf("PAYPAL_ID", CLIENT_ID)
         self.client_secret = appier.conf("PAYPAL_SECRET", CLIENT_SECRET)
