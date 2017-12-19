@@ -43,11 +43,11 @@ from . import payment
 from . import webhook
 
 BASE_URL = "https://api.paypal.com/v1/"
-""" The default base url to be used when no other
-base url value is provided to the constructor """
+""" The default base URL to be used when no other
+base URL value is provided to the constructor """
 
 SANDBOX_URL = "https://api.sandbox.paypal.com/v1/"
-""" The base url that should be used whenever using
+""" The base URL that should be used whenever using
 the api under a sandbox environment """
 
 CLIENT_ID = None
