@@ -48,11 +48,11 @@ base URL value is provided to the constructor """
 
 SANDBOX_URL = "https://api.sandbox.paypal.com/v1/"
 """ The base URL that should be used whenever using
-the api under a sandbox environment """
+the API under a sandbox environment """
 
 CLIENT_ID = None
 """ The default value to be used for the client id
-in case no client id is provided to the api client """
+in case no client id is provided to the API client """
 
 CLIENT_SECRET = None
 """ The secret value to be used for situations where
