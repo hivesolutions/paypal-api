@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <projectDescription>
-	<name>paypal_api</name>
+	<name>paypal-api</name>
 	<comment></comment>
 	<projects>
 		<project>appier</project>
