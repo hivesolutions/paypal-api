@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 # Hive PayPal API
-# Copyright (c) 2008-2020 Hive Solutions Lda.
+# Copyright (c) 2008-2025 Hive Solutions Lda.
 #
 # This file is part of Hive PayPal API.
 #
@@ -22,38 +22,26 @@
 __author__ = "João Magalhães <joamag@hive.pt>"
 """ The author(s) of the module """
 
-__version__ = "1.0.0"
-""" The version of the module """
-
-__revision__ = "$LastChangedRevision$"
-""" The revision number of the module """
-
-__date__ = "$LastChangedDate$"
-""" The last change date of the module """
-
-__copyright__ = "Copyright (c) 2008-2020 Hive Solutions Lda."
+__copyright__ = "Copyright (c) 2008-2025 Hive Solutions Lda."
 """ The copyright for the module """
 
 __license__ = "Apache License, Version 2.0"
 """ The license for the module """
 
+
 class PaymentAPI(object):
 
     def create_payment(
-        self,
-        intent = "sale",
-        payer = None,
-        transactions = [],
-        redirect_urls = []
+        self, intent="sale", payer=None, transactions=[], redirect_urls=[]
     ):
         url = self.base_url + "payments/payment"
         payload = dict(
-            intent = intent,
-            payer = payer,
-            transactions = transactions,
-            redirect_urls = redirect_urls
+            intent=intent,
+            payer=payer,
+            transactions=transactions,
+            redirect_urls=redirect_urls,
         )
-        contents = self.post(url, data_j = payload)
+        contents = self.post(url, data_j=payload)
         return contents
 
     def get_payment(self, payment):
@@ -63,5 +51,5 @@ class PaymentAPI(object):
 
     def execute_payment(self, payment, payer_id):
         url = self.base_url + "payments/payment/%s/execute" % payment
-        contents = self.post(url, data_j = dict(payer_id = payer_id))
+        contents = self.post(url, data_j=dict(payer_id=payer_id))
         return contents

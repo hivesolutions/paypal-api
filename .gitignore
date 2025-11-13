@@ -3,5 +3,7 @@
 
 session.shelve*
 
+/.venv
+
 /dist
 /src/paypal_api.egg-info

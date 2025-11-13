@@ -28,12 +28,10 @@ __copyright__ = "Copyright (c) 2008-2025 Hive Solutions Lda."
 __license__ = "Apache License, Version 2.0"
 """ The license for the module """
 
-import appier
-
-import paypal
+import unittest
 
 
-def get_api():
-    return paypal.API(
-        client_id=appier.conf("PAYPAL_ID"), client_secret=appier.conf("PAYPAL_SECRET")
-    )
+class BaseTest(unittest.TestCase):
+
+    def test_basic(self):
+        self.assertEqual(1 + 1, 2)
