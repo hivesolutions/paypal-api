@@ -18,3 +18,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 *
+
+## [0.2.0] - 2026-11-08
+
+### Added
+
+* Support for verifying the configured credentials without making a payment
+
+### Fixed
+
+* Access token no longer exposed in request URLs

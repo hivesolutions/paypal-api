@@ -33,7 +33,7 @@ import setuptools
 
 setuptools.setup(
     name="paypal-api",
-    version="0.1.5",
+    version="0.2.0",
     author="Hive Solutions Lda.",
     author_email="development@hive.pt",
     description="PayPal API Client",
