@@ -41,7 +41,7 @@ pytest
 - The CI workflow runs `pytest` on CPython 2.7 and 3.5 up to the latest release and on PyPy 2.7, 3.6, 3.9 and 3.10, so tests must not rely on Python 3 only features such as `unittest.mock`.
 - Tests must never reach the real PayPal API nor use real credentials, replace the HTTP methods of the `API` instance with fakes instead, which must also answer the `oauth2/token` request.
 - Run the tests without `PAYPAL_SANDBOX`, `PAYPAL_ID` and `PAYPAL_SECRET` in the environment, as `API` reads them, an empty `PAYPAL_SANDBOX` turns the sandbox off.
-- `python setup.py test` (`test_suite` is `paypal.test`) runs the same tests, the CI workflow still runs it on Python 3.8 and older and the deploy workflow on Python 2.7, recent setuptools no longer have it so use `pytest`.
+- `python setup.py test` (`test_suite` is `paypal.test`) runs the same tests, the CI workflow still runs it on Python 3.8 and older, recent setuptools no longer have it so use `pytest`.
 
 ## Style Guide
 
