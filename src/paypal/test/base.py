@@ -55,6 +55,69 @@ class BaseTest(unittest.TestCase):
     def test_basic(self):
         self.assertEqual(1 + 1, 2)
 
+    def test_ping(self):
+        result = self.api.ping()
+        self.assertEqual(result, dict(webhooks=[]))
+        self.assertEqual(len(self.requests), 2)
+        method, url, kwargs = self.requests[0]
+        self.assertEqual(method, appier.http.post)
+        self.assertEqual(url, "https://api.sandbox.paypal.com/v1/oauth2/token")
+        self.assertEqual(kwargs["headers"]["Authorization"], "Basic aWQ6c2VjcmV0")
+        self.assertEqual(kwargs["params"]["grant_type"], "client_credentials")
+        self.assertEqual(len(kwargs["params"]), 1)
+        method, url, kwargs = self.requests[1]
+        self.assertEqual(method, appier.http.get)
+        self.assertEqual(
+            url, "https://api.sandbox.paypal.com/v1/notifications/webhooks"
+        )
+        self.assertEqual(kwargs["headers"], dict(Authorization="Bearer token"))
+        self.assertEqual(list(kwargs["params"].items()), [])
+        self.assertEqual(self.api.access_token, "token")
+
+        # the verification is made against the configured base URL
+        # and using the credentials provided to the constructor
+        api = paypal.API(
+            base_url="https://paypal.hive.pt/v1/",
+            client_id="other",
+            client_secret="value",
+        )
+        api.request = self._request
+        api.ping()
+        _method, url, kwargs = self.requests[2]
+        self.assertEqual(url, "https://paypal.hive.pt/v1/oauth2/token")
+        self.assertEqual(kwargs["headers"]["Authorization"], "Basic b3RoZXI6dmFsdWU=")
+        _method, url, kwargs = self.requests[3]
+        self.assertEqual(url, "https://paypal.hive.pt/v1/notifications/webhooks")
+
+        # an access token that is already available is used as is, so
+        # no new token is requested before the webhooks listing
+        api = paypal.API(client_id="id", client_secret="secret", access_token="other")
+        api.request = self._request
+        api.ping()
+        self.assertEqual(len(self.requests), 5)
+        method, url, kwargs = self.requests[4]
+        self.assertEqual(method, appier.http.get)
+        self.assertEqual(kwargs["headers"], dict(Authorization="Bearer other"))
+
+        # without a client secret no token can be obtained, so the
+        # verification fails before any request is made to PayPal
+        api = paypal.API(client_id="id", client_secret=None)
+        api.request = self._request
+        self.assertRaises(appier.OAuthAccessError, api.ping)
+        self.assertEqual(len(self.requests), 5)
+
+        # invalid (or revoked) credentials are rejected by PayPal when
+        # requesting the token and that error must reach the caller,
+        # without listing the webhooks or keeping any access token
+        api = paypal.API(client_id="id", client_secret="revoked")
+        api.request = self._reject
+        self.assertRaises(appier.HTTPError, api.ping)
+        self.assertEqual(len(self.requests), 6)
+        self.assertEqual(
+            self.requests[5][1], "https://api.sandbox.paypal.com/v1/oauth2/token"
+        )
+        self.assertEqual(api.access_token, None)
+
     def test_oauth_types(self):
         self.assertEqual(self.api.oauth_types, ("header",))
 

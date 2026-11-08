@@ -102,6 +102,12 @@ class API(appier.OAuth2API, payment.PaymentAPI, webhook.WebhookAPI):
             return href
         return None
 
+    def ping(self):
+        # there's no ping endpoint in PayPal so the webhooks listing
+        # is used instead, a read only call that requires valid credentials
+        contents = self.list_webhooks()
+        return contents
+
     @property
     def oauth_types(self):
         return ("header",)
