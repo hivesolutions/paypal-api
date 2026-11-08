@@ -30,8 +30,61 @@ __license__ = "Apache License, Version 2.0"
 
 import unittest
 
+import appier
+
+import paypal
+
 
 class BaseTest(unittest.TestCase):
 
+    def setUp(self):
+        self.api = paypal.API(client_id="id", client_secret="secret")
+        self.api.request = self._request
+        self.requests = []
+
+    def _request(self, method, url, **kwargs):
+        self.requests.append((method, url, kwargs))
+        if url.endswith("/oauth2/token"):
+            return dict(access_token="token", token_type="Bearer")
+        return dict(webhooks=[])
+
+    def _reject(self, method, url, **kwargs):
+        self.requests.append((method, url, kwargs))
+        raise appier.HTTPError(None, code=401, extended=False)
+
     def test_basic(self):
         self.assertEqual(1 + 1, 2)
+
+    def test_oauth_types(self):
+        self.assertEqual(self.api.oauth_types, ("header",))
+
+        # the access token must only be sent in the authorization header
+        # and never as a query string parameter, where it would end up in
+        # the logs of every proxy and server that sees the request URL
+        self.api.get_payment("PAYID-1")
+        method, url, kwargs = self.requests[1]
+        self.assertEqual(method, appier.http.get)
+        self.assertEqual(
+            url, "https://api.sandbox.paypal.com/v1/payments/payment/PAYID-1"
+        )
+        self.assertEqual(kwargs["headers"], dict(Authorization="Bearer token"))
+        self.assertEqual(list(kwargs["params"].items()), [])
+
+        self.api.execute_payment("PAYID-1", "PAYER-1")
+        method, url, kwargs = self.requests[2]
+        self.assertEqual(method, appier.http.post)
+        self.assertEqual(
+            url, "https://api.sandbox.paypal.com/v1/payments/payment/PAYID-1/execute"
+        )
+        self.assertEqual(kwargs["headers"], dict(Authorization="Bearer token"))
+        self.assertEqual(list(kwargs["params"].items()), [])
+        self.assertEqual(kwargs["data_j"], dict(payer_id="PAYER-1"))
+
+        # the token request itself uses basic authentication only, so
+        # no bearer token or token parameter is added to it
+        method, url, kwargs = self.requests[0]
+        self.assertEqual(url, "https://api.sandbox.paypal.com/v1/oauth2/token")
+        self.assertEqual(kwargs["headers"]["Authorization"], "Basic aWQ6c2VjcmV0")
+        self.assertEqual(kwargs["params"]["grant_type"], "client_credentials")
+        self.assertEqual(len(kwargs["params"]), 1)
+        self.assertEqual(len(self.requests), 3)

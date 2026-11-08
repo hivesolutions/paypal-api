@@ -101,3 +101,7 @@ class API(appier.OAuth2API, payment.PaymentAPI, webhook.WebhookAPI):
                 continue
             return href
         return None
+
+    @property
+    def oauth_types(self):
+        return ("header",)
